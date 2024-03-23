@@ -1,5 +1,6 @@
 package com.innowise.innowise_java_hackathon.model.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Currency implements BaseEntity<String> {
+public class Currency implements Serializable {
 
     @Id
-    private String id;
-
     private String symbol;
 
-    private BigDecimal price;
+    private String price;
 }

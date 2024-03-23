@@ -1,6 +1,8 @@
 package com.innowise.innowise_java_hackathon.service;
 
 import com.innowise.innowise_java_hackathon.config.BotConfig;
+import com.innowise.innowise_java_hackathon.model.entity.Currency;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
+    private final CurrencyService currencyService;
 
     private static final String START = "/start";
     private static final String HELP = "/help";
@@ -32,7 +35,15 @@ public class TelegramBot extends TelegramLongPollingBot {
         switch (text) {
             case START -> startCommand(chatId, firstName);
             case HELP -> helpCommand(chatId);
-            default -> unknownCommand(chatId);
+            default -> {
+                if (currencyService.getCurrencies().stream()
+                        .map(Currency::getSymbol)
+                        .anyMatch(symbol -> symbol.equals(text.substring(1)))) {
+                    currencyCommand(chatId, text.substring(1));
+                } else {
+                    unknownCommand(chatId);
+                }
+            }
         }
     }
 
@@ -49,10 +60,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void startCommand(Long chatId, String firstName) {
         String responseText = """
                 Hi, %s! I am CryptoCurrency Bot!
+                
+                Enter the symbol of the currency
                             
                 Available commands:
-                /test - coming soon...
-                /help
+                /{currency symbol} - check currency by symbol
+                /help - get help
                 """;
         sendMessage(chatId, String.format(responseText, firstName));
     }
@@ -62,6 +75,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                 Help command, coming soon...
                 """;
         sendMessage(chatId, responseText);
+    }
+
+    private void currencyCommand(Long chatId, String symbol) {
+        Currency currency = currencyService.getCurrencyBySymbol(symbol);
+        String responseText = """
+                Currency %s now is %s
+                """;
+        sendMessage(chatId, String.format(responseText, currency.getSymbol(), currency.getPrice()));
     }
 
     private void unknownCommand(Long chatId) {
@@ -76,6 +97,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setChatId(String.valueOf(chatId));
         message.setText(responseText);
 
+        executeMessage(message);
+    }
+
+    private void executeMessage(SendMessage message){
         try {
             execute(message);
         } catch (TelegramApiException e) {

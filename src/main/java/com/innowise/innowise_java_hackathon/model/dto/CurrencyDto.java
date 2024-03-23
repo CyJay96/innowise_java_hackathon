@@ -14,5 +14,5 @@ public class CurrencyDto {
 
     private String symbol;
 
-    private BigDecimal price;
+    private String price;
 }

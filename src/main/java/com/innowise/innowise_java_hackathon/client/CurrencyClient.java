@@ -31,11 +31,11 @@ public class CurrencyClient {
     public CurrencyDto getCurrencyBySymbol(String symbol) {
         return webClientBuilder.build().get()
                 .uri(currencyUrl,
-                        uriBuilder -> uriBuilder.queryParam(CURRENCY_SYMBOL_FIELD, symbol)
+                        uriBuilder -> uriBuilder
+                                .queryParam(CURRENCY_SYMBOL_FIELD, symbol)
                                 .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<CurrencyDto>() {
-                })
+                .bodyToMono(CurrencyDto.class)
                 .block();
     }
 }
