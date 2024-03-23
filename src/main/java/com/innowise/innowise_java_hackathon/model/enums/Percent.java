@@ -1,4 +1,4 @@
-package com.innowise.innowise_java_hackathon.entity.enums;
+package com.innowise.innowise_java_hackathon.model.enums;
 
 public enum Percent {
 
