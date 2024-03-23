@@ -2,3 +2,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/cryptobot
+
+app:
+  currencyUrl: https://api.mexc.com/api/v3/ticker/price
+
+bot:
+  name: CryptoBot
+  token: 6574422622:AAFBCNrsE7O7oaVVQ4aeyLkqdTosdDtiYsw

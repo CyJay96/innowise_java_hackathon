@@ -31,6 +31,9 @@ dependencies {
     // DataBase
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+    // Telegram
+    implementation 'org.telegram:telegrambots:6.9.7.1'
+
     // Lombok and MapStruct
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
